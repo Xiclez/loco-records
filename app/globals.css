@@ -1,0 +1,154 @@
+@import "tailwindcss";
+
+/* ------------------------------------------------------------------ */
+/*  DESIGN TOKENS  ·  LOCO Records — HUD / transmisión desde el desierto */
+/*  Cambia --color-accent para probar otros acentos:                   */
+/*  #D4FF3A ácido · #FF3B30 señal · #00E5FF cian · #FF5BD1 rosa         */
+/* ------------------------------------------------------------------ */
+@theme inline {
+  --color-bg: #050505;
+  --color-fg: #f2f2f2;
+  --color-soft: #cfcfcf;
+  --color-muted: #8a8a8a;
+  --color-dim: #5a5a5a;
+  --color-line: #262626;
+  --color-panel: #080808;
+  --color-accent: #d4ff3a;
+
+  --font-display: var(--font-display);
+  --font-mono: var(--font-mono);
+}
+
+:root {
+  color-scheme: dark;
+  --grid: rgba(255, 255, 255, 0.045);
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 80px;
+}
+
+body {
+  background-color: var(--color-bg);
+  background-image:
+    linear-gradient(var(--grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size: 44px 44px;
+}
+@media (max-width: 640px) {
+  body { background-size: 32px 32px; }
+}
+
+::selection { background: var(--color-accent); color: #050505; }
+
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 10px; }
+::-webkit-scrollbar-track { background: #050505; border-left: 1px solid var(--color-line); }
+::-webkit-scrollbar-thumb { background: #f2f2f2; }
+::-webkit-scrollbar-thumb:hover { background: var(--color-accent); }
+
+@utility font-display {
+  font-family: var(--font-display), ui-sans-serif, system-ui, sans-serif;
+}
+
+/* ------------------------------------------------------------------ */
+/*  SCANLINES                                                          */
+/* ------------------------------------------------------------------ */
+.scan { position: relative; }
+.scan::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(0deg, rgba(255,255,255,0.035) 0 1px, transparent 1px 3px);
+}
+
+/* ------------------------------------------------------------------ */
+/*  GLITCH                                                             */
+/* ------------------------------------------------------------------ */
+.glitch { position: relative; display: inline-block; }
+.glitch::before,
+.glitch::after {
+  content: attr(data-text);
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.glitch::before {
+  left: 3px;
+  text-shadow: -3px 0 #ff3b30;
+  clip-path: inset(0 0 100% 0);
+  animation: glitch-a 2.8s infinite steps(2, jump-none);
+}
+.glitch::after {
+  left: -3px;
+  text-shadow: -3px 0 #00e5ff;
+  clip-path: inset(100% 0 0 0);
+  animation: glitch-b 3.6s infinite steps(2, jump-none);
+}
+@keyframes glitch-a {
+  0%, 92%, 100% { clip-path: inset(0 0 100% 0); }
+  93% { clip-path: inset(8% 0 62% 0); transform: translateX(-4px); }
+  96% { clip-path: inset(55% 0 20% 0); transform: translateX(4px); }
+}
+@keyframes glitch-b {
+  0%, 90%, 100% { clip-path: inset(100% 0 0 0); }
+  91% { clip-path: inset(20% 0 55% 0); transform: translateX(4px); }
+  95% { clip-path: inset(62% 0 12% 0); transform: translateX(-3px); }
+}
+
+/* ------------------------------------------------------------------ */
+/*  TICKER / BLINK / BARCODE                                           */
+/* ------------------------------------------------------------------ */
+.ticker { display: flex; width: max-content; animation: tick 28s linear infinite; }
+@keyframes tick { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+.blink { animation: blink 1.1s steps(1) infinite; }
+@keyframes blink { 50% { opacity: 0; } }
+
+.barcode {
+  background: repeating-linear-gradient(90deg,
+    #f2f2f2 0 2px, transparent 2px 4px, #f2f2f2 4px 5px, transparent 5px 9px,
+    #f2f2f2 9px 12px, transparent 12px 13px);
+}
+
+/* ------------------------------------------------------------------ */
+/*  COVER PATTERNS (placeholder hasta tener arte real)                 */
+/* ------------------------------------------------------------------ */
+.cv-1 { background: repeating-radial-gradient(circle at 30% 70%, #0d0d0d 0 14px, #1c1c1c 14px 16px); }
+.cv-2 { background: repeating-linear-gradient(45deg, #0d0d0d 0 10px, #171717 10px 11px); }
+.cv-3 { background: radial-gradient(circle at 50% 50%, #2a2a2a 0 22%, #0d0d0d 22.5% 100%); }
+.cv-4 { background: repeating-linear-gradient(0deg, #0d0d0d 0 6px, #191919 6px 7px); }
+.cv-5 { background: conic-gradient(from 45deg at 50% 50%, #0d0d0d, #1f1f1f, #0d0d0d, #1f1f1f, #0d0d0d); }
+.cv-6 { background: repeating-radial-gradient(circle at 50% 50%, #0d0d0d 0 8px, #181818 8px 9px); }
+.ph   { background: repeating-linear-gradient(135deg, #0f0f0f 0 12px, #141414 12px 13px); }
+
+/* ------------------------------------------------------------------ */
+/*  SPLASH: colapso LO[ADING] CO[LLECTIVE] → LOCO                      */
+/* ------------------------------------------------------------------ */
+.cut {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: bottom;
+  white-space: nowrap;
+  color: var(--color-dim);
+  transition: max-width 0.9s cubic-bezier(.7,0,.2,1), opacity 0.7s ease;
+}
+.cut-a { max-width: 4.2em; }
+.cut-b { max-width: 6.4em; }
+.collapsed .cut { max-width: 0; opacity: 0; }
+
+/* ------------------------------------------------------------------ */
+/*  REDUCED MOTION                                                     */
+/* ------------------------------------------------------------------ */
+@media (prefers-reduced-motion: reduce) {
+  .glitch::before, .glitch::after, .blink, .ticker { animation: none; }
+  .cut { transition: none; }
+  html { scroll-behavior: auto; }
+}
